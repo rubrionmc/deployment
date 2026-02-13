@@ -50,16 +50,15 @@ info "Clean up all old rubrion deployments"
 kubectl delete all --all -n rubrionmc
 
 # create GHCR secret if using remote images
-if [ "$PULL_POLICY" = "Always" ]; then
-  info "Creating Kubernetes secret for GHCR..."
-  kubectl create secret docker-registry ghcr-secret \
-    --docker-server=ghcr.io \
-    --docker-username="$GITHUB_USERNAME" \
-    --docker-password="$GITHUB_TOKEN" \
-    --docker-email=ghcr@localhost \
-    --namespace="$NAMESPACE" \
-    --dry-run=client -o yaml | kubectl apply -f -
-fi
+info "Creating Kubernetes secret for GHCR..."
+kubectl create secret docker-registry ghcr-secret \
+  --docker-server=ghcr.io \
+  --docker-username="$GITHUB_USERNAME" \
+  --docker-password="$GITHUB_TOKEN" \
+  --docker-email=ghcr@localhost \
+  --namespace="$NAMESPACE" \
+  --dry-run=client -o yaml | kubectl apply -f -
+
 
 # apply deployment YAMLs with dynamic image tag
 info "Applying Kubernetes deployments..."

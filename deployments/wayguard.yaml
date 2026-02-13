@@ -46,6 +46,8 @@ spec:
       labels:
         app: wayguard
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       serviceAccountName: wayguard-sa
       containers:
         - name: rubrion-wayguard
