@@ -6,5 +6,13 @@ info() {
   util/send_info.sh "$*"
 }
 
-info "Apply redis as pub-sub and cache layer..."
-kubectl apply -f deployments/redis.yaml -n "$NAMESPACE"
+: "${REDIS_PASSWORD:?REDIS_PASSWORD is required}"
+: "${NAMESPACE:?NAMESPACE is required}"
+
+
+# dynamic password replace in deployment
+info "Apply Redis as pub-sub and cache layer..."
+sed \
+  -e "s|{{REDIS_PASSWORD}}|$REDIS_PASSWORD|" \
+  deployments/redis.yaml | \
+kubectl apply -f - -n "$NAMESPACE"

@@ -5,10 +5,10 @@ metadata:
   name: mariadb-secret
 type: Opaque
 stringData:
-  MYSQL_ROOT_PASSWORD: "SECRET_ROOT_PASSWORD"
-  MYSQL_DATABASE: "minecraft"
-  MYSQL_USER: "user"
-  MYSQL_PASSWORD: "SECRET_USER_PASSWORD"
+  MYSQL_ROOT_PASSWORD: "{{MYSQL_ROOT_PASSWORD}}"
+  MYSQL_DATABASE: "{{MYSQL_DATABASE}}"
+  MYSQL_USER: "{{MYSQL_USER}}"
+  MYSQL_PASSWORD: "{{MYSQL_PASSWORD}}"
 
 ---
 apiVersion: v1
