@@ -1,6 +1,14 @@
 #!/bin/bash
 set -e
 
+# shellcheck source=$HOME/.bashrc
+source ~/.bashrc
+
+# helper function for colored echos
+info() {
+  util/send_info.sh "$*"
+}
+
 # check kubectl
 if ! command -v kubectl &> /dev/null; then
   echo "[x] Could not find 'kubectl': not installed. Please install kubectl."
@@ -14,28 +22,28 @@ if ! command -v minikube &> /dev/null; then
   exit 1
 fi
 
-echo " => Minikube found."
+info "Minikube found."
 
 # start minikube if not running
 if ! minikube status &> /dev/null; then
-  echo " => Minikube not running. Starting..."
+  info "Minikube not running. Starting..."
   minikube start --driver=docker
 else
-  echo " => Minikube already running."
+  info "Minikube already running."
 fi
 
 # set kubectl context
-echo " => Setting kubectl context to minikube..."
+info "Setting kubectl context to minikube..."
 kubectl config use-context minikube >/dev/null
 
 # check cluster connection
-echo " => Checking Kubernetes connection..."
+info "Checking Kubernetes connection..."
 if ! kubectl cluster-info &> /dev/null; then
   echo "[x] Could not connect to Kubernetes cluster even after starting minikube."
   exit 1
 fi
 
-echo "=> Start deployment in k8s"
+info "Start deployment in k8s"
 (
   ./deploy.sh
 )

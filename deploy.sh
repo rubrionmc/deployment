@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# shellcheck source=$HOME/.bashrc
+source ~/.bashrc
+
 # helper function for colored echos
 info() {
   util/send_info.sh "$*"
