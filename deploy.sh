@@ -1,13 +1,9 @@
 #!/bin/bash
 set -e
 
-# ANSI colors
-BLUE='\033[34m'
-RESET='\033[0m'
-
 # helper function for colored echos
 info() {
-  echo -e "${BLUE} => $*${RESET}"
+  util/send_info.sh "$*"
 }
 
 # load .env if it exists
@@ -68,5 +64,7 @@ fi
 # apply deployment YAMLs with dynamic image tag
 info "Applying Kubernetes deployments..."
 NAMESPACE=$NAMESPACE deployments/wayguard.sh
+NAMESPACE=$NAMESPACE deployments/redis.sh
+NAMESPACE=$NAMESPACE deployments/mariadb.sh
 
 info "Deployment complete! Check 'kubectl get pods -n $NAMESPACE' to see the status of your pods."

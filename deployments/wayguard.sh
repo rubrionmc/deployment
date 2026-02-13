@@ -1,13 +1,9 @@
 #!/bin/sh
 set -e
 
-# ANSI colors
-BLUE='\033[34m'
-RESET='\033[0m'
-
 # helper function for colored echos
 info() {
-  echo -e "${BLUE} => $*${RESET}"
+  util/send_info.sh "$*"
 }
 
 IMAGE="ghcr.io/rubrionmc/wayguard"
@@ -31,4 +27,4 @@ sed -e "s|image: ghcr.io/rubrionmc/wayguard:.*|image: ghcr.io/rubrionmc/wayguard
 kubectl apply -f - -n "$NAMESPACE"
 
 info "Restarting wayguard to pick up new image..."
-kubectl rollout restart deployment wayguard-deployment -n "$NAMESPACE"
+kubectl rollout restart deployment wayguard -n "$NAMESPACE"

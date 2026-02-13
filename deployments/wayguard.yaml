@@ -17,7 +17,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: wayguard-rolebinding
+  name: wayguard-rb
 subjects:
   - kind: ServiceAccount
     name: wayguard-sa
@@ -30,7 +30,7 @@ roleRef:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wayguard-deployment
+  name: wayguard
 spec:
   replicas: 1
   strategy:
@@ -64,7 +64,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: wayguard-service
+  name: wayguard
 spec:
   type: NodePort
   selector:
