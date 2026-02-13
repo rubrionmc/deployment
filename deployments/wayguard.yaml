@@ -49,8 +49,8 @@ spec:
       serviceAccountName: wayguard-sa
       containers:
         - name: rubrion-wayguard
-          image: ghcr.io/rubrionmc/wayguard:dev
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/rubrionmc/wayguard:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 25565
           resources:
