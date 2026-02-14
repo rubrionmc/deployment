@@ -68,7 +68,7 @@ kubectl create secret docker-registry ghcr-secret \
 # apply deployment YAMLs with dynamic image tag
 info "Applying Kubernetes deployments..."
 NAMESPACE=$NAMESPACE deployments/wayguard.sh
-NAMESPACE=$NAMESPACE deployments/nonconnnnector.sh
+NAMESPACE=$NAMESPACE deployments/nonconnector.sh
 NAMESPACE=$NAMESPACE deployments/redis.sh
 NAMESPACE=$NAMESPACE deployments/mariadb.sh
 
