@@ -1,0 +1,7 @@
+# Shell scripts und Kubernetes YAMLs immer mit LF
+*.sh     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+
+# Alles andere normal
+*        text=auto
