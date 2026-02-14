@@ -1,6 +1,9 @@
-# env file
-*.env
+# .env file
 .env
+
+# run folder
+.run
+.run/**
 
 # Editor/IDE
 .idea/

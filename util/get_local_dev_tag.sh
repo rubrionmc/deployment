@@ -3,19 +3,21 @@ set -e
 
 TARGET_IMAGE="$1"
 TAG=""
+DEV_TAGS_FILE="$(dirname "$0")/../.run/DEV_TAGS"
 
-if [ -n "$LOCAL_DEV_TAGS" ]; then
-  OLD_IFS="$IFS"
-  IFS=','
-  for t in $LOCAL_DEV_TAGS; do
-    IFS="$OLD_IFS"
-    case "$t" in
-      $TARGET_IMAGE:*)
-        TAG="${t#"$TARGET_IMAGE":}"
-        break
-        ;;
-    esac
-  done
+if [ -f "$DEV_TAGS_FILE" ]; then
+    while IFS= read -r line; do
+        # Skip empty lines and comments
+        if [ -z "$line" ] || [ "${line# }" = "" ] || [ "${line#\#}" != "$line" ]; then
+            continue
+        fi
+        case "$line" in
+            $TARGET_IMAGE:*)
+                TAG="${line#"$TARGET_IMAGE":}"
+                break
+                ;;
+        esac
+    done < "$DEV_TAGS_FILE"
 fi
 
 echo "$TAG"
