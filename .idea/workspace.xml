@@ -27,7 +27,7 @@
     "last_opened_file_path": "/space/leycm/Projects/rubrion/k8s/setup.sh"
   }
 }]]></component>
-  <component name="RunManager" selected="Shell Script.setup">
+  <component name="RunManager" selected="Shell Script.deploy">
     <configuration name="clear" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="" />
       <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
