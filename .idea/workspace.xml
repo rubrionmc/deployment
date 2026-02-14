@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="14686072-e2ce-44d6-b5a4-ffaec2405612" name="Changes" comment="fix: correct typo in nonconnector deployment script path">
+      <change afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy.sh" beforeDir="false" afterPath="$PROJECT_DIR$/deploy.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployments/nonconnector.sh" beforeDir="false" afterPath="$PROJECT_DIR$/deployments/nonconnector.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployments/nonconnector.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/deployments/nonconnector.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "SHELLCHECK.PATH": "/home/leycm/.local/share/JetBrains/GoLand2025.3/Shell Script/shellcheck",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/space/leycm/Projects/rubrion/k8s/setup.sh"
+  }
+}]]></component>
   <component name="RunManager" selected="Shell Script.setup">
     <configuration name="clear" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="" />
@@ -34,7 +61,7 @@
     <configuration name="setup" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="" />
       <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
-      <option name="SCRIPT_PATH" value="" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/setup.sh" />
       <option name="SCRIPT_OPTIONS" value="" />
       <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
       <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -51,5 +78,16 @@
       <item itemvalue="Shell Script.clear" />
       <item itemvalue="Shell Script.setup" />
     </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-72a9cf600ed8-dfa3e7267ae0-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-253.29346.379" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-GO-253.29346.379" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <servers />
   </component>
 </project>
