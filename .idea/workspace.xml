@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="14686072-e2ce-44d6-b5a4-ffaec2405612" name="Changes" comment="fix: update RunManager selected script from 'Shell Script.setup' to 'Shell Script.deploy'" />
+    <list default="true" id="14686072-e2ce-44d6-b5a4-ffaec2405612" name="Changes" comment="fix: update .gitattributes to enforce LF line endings for shell scripts and YAML files">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployments/nonconnector.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/deployments/nonconnector.yaml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -99,6 +102,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add: create .gitattributes file for consistent line endings and binary file handling" />
     <MESSAGE value="fix: update RunManager selected script from 'Shell Script.setup' to 'Shell Script.deploy'" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: update RunManager selected script from 'Shell Script.setup' to 'Shell Script.deploy'" />
+    <MESSAGE value="add: configure .gitattributes for consistent line endings and update workspace.xml for script management" />
+    <MESSAGE value="fix: update .gitattributes to enforce LF line endings for shell scripts and YAML files" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: update .gitattributes to enforce LF line endings for shell scripts and YAML files" />
   </component>
 </project>

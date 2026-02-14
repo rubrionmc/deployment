@@ -19,7 +19,6 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-secret
-      serviceAccountName: nonconnector-sa
       containers:
         - name: rubrion-nonconnector
           image: ghcr.io/rubrionmc/nonconnector:latest
