@@ -1,31 +1,21 @@
 #!/bin/bash
 set -e
 
-# shellcheck source=$HOME/.bashrc
-source ~/.bashrc
-
 # helper function for colored echos
 info() {
   util/send_info.sh "$*"
 }
 
 # check kubectl
-if ! command -v kubectl &> /dev/null; then
-  echo "[x] Could not find 'kubectl': not installed. Please install kubectl."
-  exit 1
-fi
+command -v kubectl >/dev/null || { echo "[x] kubectl not installed"; exit 1; }
 
 # check minikube
-if ! command -v minikube &> /dev/null; then
-  echo "[x] Minikube is not installed."
-  echo "    Install: https://minikube.sigs.k8s.io/docs/start/"
-  exit 1
-fi
+command -v minikube >/dev/null || { echo "[x] minikube not installed"; exit 1; }
 
 info "Minikube found."
 
 # start minikube if not running
-if ! minikube status &> /dev/null; then
+if ! minikube status --format='{{.Host}}' | grep -q Running; then
   info "Minikube not running. Starting..."
   minikube start --driver=docker
 else
@@ -38,15 +28,30 @@ kubectl config use-context minikube >/dev/null
 
 # check cluster connection
 info "Checking Kubernetes connection..."
-if ! kubectl cluster-info &> /dev/null; then
-  echo "[x] Could not connect to Kubernetes cluster even after starting minikube."
-  exit 1
-fi
+kubectl cluster-info >/dev/null || { echo "[x] Kubernetes not reachable"; exit 1; }
+
+SCRIPT_PATH="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
+WORKSPACE_DIR="$(dirname "$SCRIPT_PATH")"
+
+info "Setting RK8S=$WORKSPACE_DIR"
+
+# bash
+sed -i '/export RK8S=/d' "$HOME/.bashrc" 2>/dev/null || true
+echo "export RK8S=\"$WORKSPACE_DIR\"" >> "$HOME/.bashrc"
+
+# zsh
+sed -i '/export RK8S=/d' "$HOME/.zshrc" 2>/dev/null || true
+echo "export RK8S=\"$WORKSPACE_DIR\"" >> "$HOME/.zshrc"
+
+# fish
+mkdir -p "$HOME/.config/fish"
+sed -i '/set -x RK8S/d' "$HOME/.config/fish/config.fish" 2>/dev/null || true
+echo "set -x RK8S \"$WORKSPACE_DIR\"" >> "$HOME/.config/fish/config.fish"
+
+# current shell
+export RK8S="$WORKSPACE_DIR"
 
 info "Start deployment in k8s"
-(
-  ./deploy.sh
-)
-wait
+./deploy.sh
 
-echo "[+] Done:  Kubernetes cluster reachable."
+echo "[+] Done: Kubernetes cluster reachable."
