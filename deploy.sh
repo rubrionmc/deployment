@@ -9,6 +9,8 @@ info() {
   util/send_info.sh "$*"
 }
 
+echo "[*] Starting deployment to Kubernetes cluster..."
+
 # load .env if it exists
 ENV_FILE=".env"
 if [ -f "$ENV_FILE" ]; then

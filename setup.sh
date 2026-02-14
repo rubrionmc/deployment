@@ -6,6 +6,8 @@ info() {
   util/send_info.sh "$*"
 }
 
+echo "[*] Setting up local Kubernetes cluster with Minikube..."
+
 # check kubectl
 command -v kubectl >/dev/null || { echo "[x] kubectl not installed"; exit 1; }
 
