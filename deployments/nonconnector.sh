@@ -3,7 +3,7 @@ set -e
 
 # helper function for colored echos
 info() {
-  util/send_info.sh "$*"
+  utils/send_info.sh "$*"
 }
 
 : "${NAMESPACE:?NAMESPACE is required}"

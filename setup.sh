@@ -3,7 +3,7 @@ set -e
 
 # helper function for colored echos
 info() {
-  util/send_info.sh "$*"
+  utils/send_info.sh "$*"
 }
 
 echo "[*] Setting up local Kubernetes cluster with Minikube..."
