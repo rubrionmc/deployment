@@ -73,3 +73,10 @@ NAMESPACE=$NAMESPACE deployments/redis.sh
 NAMESPACE=$NAMESPACE deployments/mariadb.sh
 
 info "Deployment complete! Check 'kubectl get pods -n $NAMESPACE' to see the status of your pods."
+
+sleep 1
+
+info "Start port forwarding for wayguard (port 25565) to access them locally..."
+(
+kubectl port-forward -n rubrionmc svc/wayguard 25565:25565
+) > /dev/null

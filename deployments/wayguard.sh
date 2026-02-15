@@ -22,11 +22,8 @@ else
 fi
 
 # temporarily modify the YAML with correct image tag and pull policy
-info "Apply wayguard with tag: $IMAGE_TAG and pullPolicy: $PULL_POLICY..."
+info "Applying wayguard with tag: $IMAGE_TAG and pullPolicy: $PULL_POLICY..."
 sed -e "s|image: ghcr.io/rubrionmc/wayguard:.*|image: ghcr.io/rubrionmc/wayguard:$IMAGE_TAG|" \
     -e "s|imagePullPolicy: .*|imagePullPolicy: $PULL_POLICY|" \
     deployments/wayguard.yaml | \
 kubectl apply -f - -n "$NAMESPACE"
-
-info "Restarting wayguard to pick up new image..."
-kubectl rollout restart deployment wayguard -n "$NAMESPACE"

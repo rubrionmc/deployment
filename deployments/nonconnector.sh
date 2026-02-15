@@ -22,11 +22,8 @@ else
 fi
 
 # temporarily modify the YAML with correct image tag and pull policy
-info "Apply nonconnector with tag: $IMAGE_TAG and pullPolicy: $PULL_POLICY..."
+info "Applying nonconnector with tag: $IMAGE_TAG and pullPolicy: $PULL_POLICY..."
 sed -e "s|image: ghcr.io/rubrionmc/nonconnector:.*|image: ghcr.io/rubrionmc/nonconnector:$IMAGE_TAG|" \
     -e "s|imagePullPolicy: .*|imagePullPolicy: $PULL_POLICY|" \
     deployments/nonconnector.yaml | \
 kubectl apply -f - -n "$NAMESPACE"
-
-info "Restarting nonconnector to pick up new image..."
-kubectl rollout restart deployment nonconnector -n "$NAMESPACE"

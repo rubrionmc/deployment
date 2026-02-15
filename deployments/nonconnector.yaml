@@ -24,7 +24,7 @@ spec:
           image: ghcr.io/rubrionmc/nonconnector:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 25565
+            - containerPort: 25575
           resources:
             limits:
               cpu: "0.5"
