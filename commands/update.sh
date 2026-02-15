@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
-# shellcheck source=src/util.sh
+
+# start timer for setup
+START_TIME_UPDATE=$(date +%s)
+
+# shellcheck source=$HOME/.bashrc
 source ~/.bashrc
 
 # helper function for colored echos
@@ -8,7 +12,7 @@ info() {
   "$RK8S"/utils/send_info.sh "$*"
 }
 
-echo "[*] Starting local image build..."
+echo "[+] Starting local image build..."
 
 # check git
 if ! command -v git &> /dev/null; then
@@ -109,5 +113,6 @@ info "Start deployment in $RK8S"
   sh deploy.sh
 )
 
-# final message
-echo "[+] Done: ${IMAGE}:${LOCAL_TAG} deployed"
+END_TIME_UPDATE=$(date +%s)
+RUNTIME_UPDATE=$((END_TIME_UPDATE - START_TIME_UPDATE))
+echo "[*] Done: ${IMAGE}:${LOCAL_TAG} deployed in ${RUNTIME_UPDATE}s"

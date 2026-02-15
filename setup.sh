@@ -1,12 +1,18 @@
 #!/bin/bash
 set -e
 
+# start timer for setup
+START_TIME_SETUP=$(date +%s)
+
+# shellcheck source=$HOME/.bashrc
+source ~/.bashrc
+
 # helper function for colored echos
 info() {
   utils/send_info.sh "$*"
 }
 
-echo "[*] Setting up local Kubernetes cluster with Minikube..."
+echo "[+] Setting up local Kubernetes cluster with Minikube..."
 
 # check kubectl
 command -v kubectl >/dev/null || { echo "[x] kubectl not installed"; exit 1; }
@@ -56,4 +62,6 @@ export RK8S="$WORKSPACE_DIR"
 info "Start deployment in k8s"
 ./deploy.sh
 
-echo "[+] Done: Kubernetes cluster reachable."
+END_TIME_SETUP=$(date +%s)
+RUNTIME_SETUP=$((END_TIME_SETUP - START_TIME_SETUP))
+echo "[*] Done: Kubernetes cluster reachable after ${RUNTIME_SETUP}s"

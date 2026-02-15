@@ -1,11 +1,18 @@
 #!/bin/bash
 set -e
 
+# start timer for setup
+START_TIME_REMOVE=$(date +%s)
+
+# shellcheck source=$HOME/.bashrc
+source ~/.bashrc
+
+# helper function for colored echos
 info() {
   "$RK8S"/utils/send_info.sh "$*"
 }
 
-echo "[*] Remove local images and entry's..."
+echo "[+] Remove local images and entry's..."
 
 # check git
 if ! command -v git &> /dev/null; then
@@ -62,4 +69,6 @@ info "Redeploying $RK8S without this local image"
   sh deploy.sh
 )
 
-echo "[+] Done"
+END_TIME_REMOVE=$(date +%s)
+RUNTIME_REMOVE=$((END_TIME_REMOVE - START_TIME_REMOVE))
+echo "[*] Done: deployed in ${RUNTIME_REMOVE}s"

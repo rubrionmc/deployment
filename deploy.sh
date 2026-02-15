@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# start timer for deployment
+START_TIME_DEPLOY=$(date +%s)
+
 # shellcheck source=$HOME/.bashrc
 source ~/.bashrc
 
@@ -9,10 +12,11 @@ info() {
   utils/send_info.sh "$*"
 }
 
-echo "[*] Starting deployment to Kubernetes cluster..."
+echo "[+] Starting deployment to Kubernetes cluster..."
 
 # load .env if it exists
 ENV_FILE=".env"
+PID_FILE=".run/forward.pid"
 if [ -f "$ENV_FILE" ]; then
   info "Loading environment variables from $ENV_FILE"
   set -a
@@ -54,6 +58,18 @@ info "All pre-checks passed!"
 info "Clean up all old rubrion deployments"
 kubectl delete all --all -n rubrionmc
 
+# kill old port-forward if running
+info "Checking for existing port-forward process..."
+if [ -f "$PID_FILE" ]; then
+    OLD_PID=$(cat "$PID_FILE")
+    if kill -0 "$OLD_PID" 2>/dev/null; then
+        info "Killing old port-forward process (PID $OLD_PID)"
+        kill "$OLD_PID"
+        #sleep 1
+    fi
+    rm -f "$PID_FILE"
+fi
+
 # create GHCR secret if using remote images
 info "Creating Kubernetes secret for GHCR..."
 kubectl create secret docker-registry ghcr-secret \
@@ -74,9 +90,13 @@ NAMESPACE=$NAMESPACE deployments/mariadb.sh
 
 info "Deployment complete! Check 'kubectl get pods -n $NAMESPACE' to see the status of your pods."
 
-sleep 1
-
+# start port forwarding for wayguard
 info "Start port forwarding for wayguard (port 25565) to access them locally..."
-(
-kubectl port-forward -n rubrionmc svc/wayguard 25565:25565
-) > /dev/null
+kubectl port-forward -n rubrionmc svc/wayguard 25565:25565 \
+    > /dev/null 2>&1 &
+NEW_PID=$!
+echo "$NEW_PID" > "$PID_FILE"
+
+END_TIME_DEPLOY=$(date +%s)
+RUNTIME_DEPLOY=$((END_TIME_DEPLOY - START_TIME_DEPLOY))
+echo "[*] Done: deployed in ${RUNTIME_DEPLOY}s"
