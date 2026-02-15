@@ -10,7 +10,7 @@ info() {
 
 IMAGE="ghcr.io/rubrionmc/wayguard"
 info "Determining image tag for $IMAGE from LOCAL_DEV_TAGS='$LOCAL_DEV_TAGS'..."
-IMAGE_TAG=$(util/get_local_dev_tag.sh "$IMAGE")
+IMAGE_TAG=$(utils/get_local_dev_tag.sh "$IMAGE")
 
 if [ -n "$IMAGE_TAG" ]; then
   PULL_POLICY="Never"
