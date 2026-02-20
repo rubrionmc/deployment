@@ -83,9 +83,8 @@ info "DEV_TAGS file updated: $NEW_ENTRY"
 
 # clean up old deployments
 info "Clean up all old local images..."
-docker images --format '{{.Repository}}:{{.Tag}} {{.ID}}' \
-  | grep ":local-" \
-  | awk '{print $2}' \
+docker images --format '{{.Repository}} {{.Tag}} {{.ID}}' \
+  | awk -v img="${IMAGE}" '$1 == img && $2 ~ /^local-/ { print $3 }' \
   | xargs -r docker rmi -f
 
 info "Building local dev image: ${IMAGE}:${LOCAL_TAG}"
