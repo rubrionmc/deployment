@@ -1,10 +1,14 @@
 # .env file
-.env
+.old/.env
 
 # run folder
-.run
-.run/**
+**/.run
+**/.run/**
 
-# Editor/IDE
-.idea/
+# old folder
+**/.old
+**/.old/**
+
+# editor & ide folders
+**/.idea/
 .vscode/
