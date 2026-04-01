@@ -1,15 +1,16 @@
 # .env file
 .env
 
-# run folder
-**/.run
-**/.run/**
+# run folders
+**/.runtime/
+**/.runtime/**
 
-.tar/
-.tar/**
-
+# tar folders
 **/.tar/
 **/.tar/**
+
+# github token
+/github-token.secret
 
 # Editor/IDE
 .idea/
