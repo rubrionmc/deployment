@@ -2,8 +2,14 @@
 .env
 
 # run folder
-.run
-.run/**
+**/.run
+**/.run/**
+
+.tar/
+.tar/**
+
+**/.tar/
+**/.tar/**
 
 # Editor/IDE
 .idea/
