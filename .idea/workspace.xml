@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="14686072-e2ce-44d6-b5a4-ffaec2405612" name="Changes" comment="fix: remove serviceAccountName from nonconnector.yaml and update workspace.xml for commit history consistency">
+    <list default="true" id="14686072-e2ce-44d6-b5a4-ffaec2405612" name="Changes" comment="docs(env): update example .env file with clearer instructions and placeholders&#10;Add comments to guide users in filling out their GitHub credentials and token.&#10;Update .gitignore to exclude old .env files and improve folder structure.">
+      <change afterPath="$PROJECT_DIR$/clear.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/setup.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.example.env" beforeDir="false" afterPath="$PROJECT_DIR$/.example.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deploy.sh" beforeDir="false" afterPath="$PROJECT_DIR$/deploy.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployments/nonconnector.sh" beforeDir="false" afterPath="$PROJECT_DIR$/deployments/nonconnector.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployments/nonconnector.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/deployments/nonconnector.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployments/redis.sh" beforeDir="false" afterPath="$PROJECT_DIR$/deployments/redis.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployments/wayguard.sh" beforeDir="false" afterPath="$PROJECT_DIR$/deployments/wayguard.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +21,14 @@
       <entry key="_/space/leycm/Projects/rubrion/k8s" value="39fcANx8jnbBo6ZcYHDltrCw61Y" />
     </persistenceIdMap>
   </component>
-  <component name="GOROOT" url="file://$USER_HOME$/sdk/go1.25.7" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file:///usr/lib/go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
@@ -62,6 +68,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
     &quot;RunOnceActivity.GoLinterPluginOnboardingV2&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.GoLinterPluginStorageMigration&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -75,17 +82,44 @@
     &quot;Shell Script.setup.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/space/leycm/Projects/rubrion/k8s/setup.sh&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/space/leycm/Projects/rubrion/k8s/.run&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.run" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.old" />
+      <recent name="$PROJECT_DIR$/src/command" />
+    </key>
+  </component>
   <component name="RunManager" selected="Shell Script.deploy">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="k8s" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="k8s" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
     <configuration name="clear" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="" />
       <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
-      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/clear.sh" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/.old/clear.sh" />
       <option name="SCRIPT_OPTIONS" value="" />
       <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
       <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -171,7 +205,23 @@
     <MESSAGE value="add: configure .gitattributes for consistent line endings and update workspace.xml for script management" />
     <MESSAGE value="fix: update .gitattributes to enforce LF line endings for shell scripts and YAML files" />
     <MESSAGE value="fix: remove serviceAccountName from nonconnector.yaml and update workspace.xml for commit history consistency" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: remove serviceAccountName from nonconnector.yaml and update workspace.xml for commit history consistency" />
+    <MESSAGE value="remove: remove old deploy system" />
+    <MESSAGE value="docs(env): update example .env file with clearer instructions and placeholders&#10;Add comments to guide users in filling out their GitHub credentials and token.&#10;Update .gitignore to exclude old .env files and improve folder structure." />
+    <option name="LAST_COMMIT_MESSAGE" value="docs(env): update example .env file with clearer instructions and placeholders&#10;Add comments to guide users in filling out their GitHub credentials and token.&#10;Update .gitignore to exclude old .env files and improve folder structure." />
+  </component>
+  <component name="VgoModernizerVersionTracker">
+    <upgrades>
+      <map>
+        <entry key="$PROJECT_DIR$/src/go.mod">
+          <value>
+            <VersionUpgradeInfo>
+              <version>1.26.1</version>
+              <timestamp>1775049575866</timestamp>
+            </VersionUpgradeInfo>
+          </value>
+        </entry>
+      </map>
+    </upgrades>
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
