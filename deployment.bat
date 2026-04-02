@@ -76,15 +76,19 @@ exit /b 0
         exit /b 1
     )
 
-    :: set deployment dir
-    set WORKSPACE_DIR=%~dp0
+    :: set deployment dir (dp0 already includes trailing backslash)
+    set "WORKSPACE_DIR=%~dp0"
     :: remove trailing backslash
-    if "%WORKSPACE_DIR:~-1%"=="\" set WORKSPACE_DIR=%WORKSPACE_DIR:~0,-1%
+    if "%WORKSPACE_DIR:~-1%"=="\" set "WORKSPACE_DIR=%WORKSPACE_DIR:~0,-1%"
 
     echo  =^> Setting %DEPLOYMENT_ENV%=%WORKSPACE_DIR%
 
     :: set environment variable permanently for current user
-    setx %DEPLOYMENT_ENV% "%WORKSPACE_DIR%"
+    setx "%DEPLOYMENT_ENV%" "%WORKSPACE_DIR%"
+    if %ERRORLEVEL% neq 0 (
+        echo [x] setx failed
+        exit /b 1
+    )
 
     :: set for current session as well
     set %DEPLOYMENT_ENV%=%WORKSPACE_DIR%
