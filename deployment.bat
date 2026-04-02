@@ -70,7 +70,11 @@ exit /b 0
         echo [x] Install command can only be executed in the deployment folder
         exit /b 1
     )
+
     set /p FIRST_LINE=<"%GO_MOD_FILE%"
+    :: strip carriage return from CRLF line endings
+    set "FIRST_LINE=%FIRST_LINE:\r=%"
+    for /f "delims=" %%A in ("%FIRST_LINE%") do set "FIRST_LINE=%%A"
     if not "%FIRST_LINE%"=="%GO_MODULE%" (
         echo [x] Install command can only be executed in the deployment folder
         exit /b 1
@@ -86,12 +90,12 @@ exit /b 0
     :: set environment variable permanently for current user
     setx "%DEPLOYMENT_ENV%" "%WORKSPACE_DIR%"
     if %ERRORLEVEL% neq 0 (
-        echo [x] setx failed
+        echo [x] Failed to set environment variable
         exit /b 1
     )
 
     :: set for current session as well
-    set %DEPLOYMENT_ENV%=%WORKSPACE_DIR%
+    set "%DEPLOYMENT_ENV%=%WORKSPACE_DIR%"
 
     echo  =^> [i] Please restart your shell or open a new terminal window for the variable to take effect.
 
