@@ -1,0 +1,18 @@
+# the domain name of the server, e.g. rubrion.net
+exposed_domain: rubrion.lab
+
+# schould claim domain localy only use for local development
+claim_domain_localy: true
+
+# the max Memory Usage (1Gi = 1 Gigabyte, 1Mi = 1 Mebibyte)
+memory_usage_limit: 16Gi
+
+# the max CPU Usage (100% = 1 CPU Core)
+cpu_usage_limit: 600%
+
+# the standart game server count, in pord 3/2
+game_server_minimal: 1
+
+# the version suffix for the docker image, leave plank to use the prod version
+# e.g. "staging" for "1.0-staging"
+version_suffix: ""

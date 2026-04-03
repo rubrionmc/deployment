@@ -25,6 +25,12 @@ if "%~1"=="" (
 :: check for install command
 if "%~1"=="install" (
     call :install_deployment
+    if not exist "%GO_DIR%" (
+        where go >nul 2>&1
+        if errorlevel 1 (
+            call :download_go
+        )
+    )
     exit /b 0
 )
 

@@ -1,6 +1,9 @@
 package log
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 const (
 	BlueConsoleColorChar  = "\033[34m"
@@ -8,24 +11,56 @@ const (
 	ResetConsoleColorChar = "\033[0m"
 )
 
-// PrintStep print yello info with indent
-func PrintStep(msg string, indent int) {
-	fmt.Println(BlueConsoleColorChar + prefix(indent) + " => " + msg + ResetConsoleColorChar)
+// PrintStep prints blue info with indent
+func PrintStep(indent int, msg ...any) {
+	fmt.Println(
+		BlueConsoleColorChar +
+			prefix(indent) +
+			" => " +
+			fmt.Sprint(msg...) +
+			ResetConsoleColorChar,
+	)
 }
 
-// OpenProcess print yello info with indent
-func OpenProcess(msg string, indent int) {
-	fmt.Println(prefix(indent) + "[*] " + msg)
+// OpenProcess prints info with indent
+func OpenProcess(indent int, msg ...any) {
+	fmt.Println(
+		prefix(indent) +
+			"[*] " +
+			fmt.Sprint(msg...),
+	)
 }
 
-// EndProcess print yello info with indent
-func EndProcess(msg string, indent int) {
-	fmt.Println(BlueConsoleColorChar + prefix(indent) + ResetConsoleColorChar + "[*] " + msg)
+// EndProcess prints blue info with indent
+func EndProcess(indent int, msg ...any) {
+	fmt.Println(
+		BlueConsoleColorChar +
+			prefix(indent) +
+			ResetConsoleColorChar +
+			"[*] " +
+			fmt.Sprint(msg...) +
+			ResetConsoleColorChar,
+	)
+
+	if indent == 0 {
+		os.Exit(0)
+	}
 }
 
-// FailProcess print red info with indent, indent is optional, default is 0
-func FailProcess(msg string, indent int) {
-	fmt.Println(BlueConsoleColorChar + prefix(indent) + RedConsoleColorChar + "[x] " + msg + ResetConsoleColorChar)
+// FailProcess prints red info with indent
+func FailProcess(indent int, msg ...any) {
+	fmt.Println(
+		BlueConsoleColorChar +
+			prefix(indent) +
+			RedConsoleColorChar +
+			"[x] " +
+			fmt.Sprint(msg...) +
+			ResetConsoleColorChar,
+	)
+
+	if indent == 0 {
+		os.Exit(1)
+	}
 }
 
 func prefix(indent int) string {

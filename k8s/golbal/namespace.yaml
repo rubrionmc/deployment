@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{PREFIX}}-proxy
+  labels:
+    environment: {{ENVIRONMENT}}
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{PREFIX}}-game
+  labels:
+    environment: {{ENVIRONMENT}}
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{PREFIX}}-infra
+  labels:
+    environment: {{ENVIRONMENT}}
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{PREFIX}}-api
+  labels:
+    environment: {{ENVIRONMENT}}
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{PREFIX}}-web
+  labels:
+    environment: {{ENVIRONMENT}}

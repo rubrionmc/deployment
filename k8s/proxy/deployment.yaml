@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bungee
+  namespace: {{PREFIX}}-{{NAMESPACE}}
+spec:
+  replicas: 2
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: {{NAMESPACE}}
+      role: primary
+
+  template:
+    metadata:
+      labels:
+        app: {{NAMESPACE}}
+        role: primary
+
+    spec:
+      containers:
+        - name: bungee
+          image: {{IMAGE:bungee}}
+
+          ports:
+            - containerPort: 25565
+
+          readinessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+          livenessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: "100"
+            limits:
+              memory: 1Gi
+              cpu: "200"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fallback
+  namespace: {{PREFIX}}-{{NAMESPACE}}
+spec:
+  replicas: 1
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: {{NAMESPACE}}
+      role: fallback
+
+  template:
+    metadata:
+      labels:
+        app: {{NAMESPACE}}
+        role: fallback
+
+    spec:
+      containers:
+        - name: fallback
+          image: {{IMAGE:fallback}}
+
+          ports:
+            - containerPort: 25565
+
+          readinessProbe:
+            tcpSocket:
+              port: 25565
+
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: "50"
+            limits:
+              memory: 256Mi
+              cpu: "100"

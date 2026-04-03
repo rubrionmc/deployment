@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# start timer for deployment
+# start timer for deployment.yaml
 ROOT_PROCESS_START_TIME=$(date +%s)
 
 # shellcheck source=$HOME/.bashrc
@@ -47,7 +47,7 @@ install_deployment() {
       exit 1
   fi
 
-  # set deployment dir
+  # set deployment.yaml dir
   SCRIPT_PATH="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
   WORKSPACE_DIR="$(dirname "$SCRIPT_PATH")"
 
@@ -145,12 +145,15 @@ run_go() {
 # check for install command
 if [ "$1" = "install" ]; then
   install_deployment
+  if [ ! -d "$GO_DIR" ] && ! command -v go >/dev/null 2>&1; then
+      download_go
+  fi
   exit 0
 fi
 
 # check if installed
 if [ -z "${!DEPLOYMENT_ENV}" ]; then
-    echo "[x] Deployment cound not be found: Environment variable $DEPLOYMENT_ENV is not set."
+    echo "[x] Deployment cound not be found: Environment variable $DEPLOYMENT_ENV is not set. Please run 'deployment install' first."
     exit 1
 fi
 
