@@ -138,8 +138,7 @@ run_go() {
   local GO_EXEC="$1"
 
   info "Running Go file using: $GO_EXEC"
-
-  "$GO_EXEC" run "$GO_FILE" "$@"
+  "$GO_EXEC" run "$GO_FILE" "${@:2}"
 }
 
 # check for install command
@@ -153,17 +152,15 @@ fi
 
 # check if installed
 if [ -z "${!DEPLOYMENT_ENV}" ]; then
-    echo "[x] Deployment cound not be found: Environment variable $DEPLOYMENT_ENV is not set. Please run 'deployment install' first."
+    echo "[x] Deployment cound not be found: Environment variable $DEPLOYMENT_ENV is not set. Please run 'deployment.sh install' first."
     exit 1
 fi
 
 if command -v go >/dev/null 2>&1; then
   # check system go version
-  info "Found system Go"
   run_go go "$@"
 elif [ -x "$GO_BIN" ]; then
   # check local go version
-  info "Found local runtime Go"
   run_go "$GO_BIN" "$@"
 else
   # install and run local go runtime

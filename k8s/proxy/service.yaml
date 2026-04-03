@@ -12,7 +12,7 @@ spec:
   ports:
     - name: minecraft
       port: 25565
-      targetPort: 25565
+      targetPort: {{PORT:minecraft}}
       protocol: TCP
 
   externalTrafficPolicy: Local

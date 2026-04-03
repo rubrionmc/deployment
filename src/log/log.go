@@ -3,6 +3,7 @@ package log
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 const (
@@ -11,13 +12,22 @@ const (
 	ResetConsoleColorChar = "\033[0m"
 )
 
+// helper: join msg parts with space
+func joinMsg(msg ...any) string {
+	parts := make([]string, len(msg))
+	for i, m := range msg {
+		parts[i] = fmt.Sprint(m)
+	}
+	return strings.Join(parts, " ")
+}
+
 // PrintStep prints blue info with indent
 func PrintStep(indent int, msg ...any) {
 	fmt.Println(
 		BlueConsoleColorChar +
 			prefix(indent) +
 			" => " +
-			fmt.Sprint(msg...) +
+			joinMsg(msg...) +
 			ResetConsoleColorChar,
 	)
 }
@@ -27,7 +37,7 @@ func OpenProcess(indent int, msg ...any) {
 	fmt.Println(
 		prefix(indent) +
 			"[*] " +
-			fmt.Sprint(msg...),
+			joinMsg(msg...),
 	)
 }
 
@@ -38,7 +48,7 @@ func EndProcess(indent int, msg ...any) {
 			prefix(indent) +
 			ResetConsoleColorChar +
 			"[*] " +
-			fmt.Sprint(msg...) +
+			joinMsg(msg...) +
 			ResetConsoleColorChar,
 	)
 
@@ -54,7 +64,7 @@ func FailProcess(indent int, msg ...any) {
 			prefix(indent) +
 			RedConsoleColorChar +
 			"[x] " +
-			fmt.Sprint(msg...) +
+			joinMsg(msg...) +
 			ResetConsoleColorChar,
 	)
 

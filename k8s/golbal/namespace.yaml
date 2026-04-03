@@ -4,6 +4,7 @@ metadata:
   name: {{PREFIX}}-proxy
   labels:
     environment: {{ENVIRONMENT}}
+    identity: proxy
 
 ---
 
@@ -13,6 +14,7 @@ metadata:
   name: {{PREFIX}}-game
   labels:
     environment: {{ENVIRONMENT}}
+    identity: game
 
 ---
 
@@ -22,6 +24,7 @@ metadata:
   name: {{PREFIX}}-infra
   labels:
     environment: {{ENVIRONMENT}}
+    identity: infra
 
 ---
 
@@ -31,6 +34,7 @@ metadata:
   name: {{PREFIX}}-api
   labels:
     environment: {{ENVIRONMENT}}
+    identity: api
 
 ---
 
@@ -40,3 +44,4 @@ metadata:
   name: {{PREFIX}}-web
   labels:
     environment: {{ENVIRONMENT}}
+    identity: web

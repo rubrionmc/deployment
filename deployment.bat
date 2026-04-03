@@ -36,7 +36,7 @@ if "%~1"=="install" (
 
 :: check if installed
 if not defined %DEPLOYMENT_ENV% (
-    echo [x] Deployment could not be found: Environment variable %DEPLOYMENT_ENV% is not set.
+    echo [x] Deployment could not be found: Environment variable %DEPLOYMENT_ENV% is not set. Please run deployment.bat install first.
     exit /b 1
 )
 
