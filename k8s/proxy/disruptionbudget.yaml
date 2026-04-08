@@ -1,7 +1,7 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{NAMESPACE}}-pdb
+  name: pod-disruption-budget
   namespace: {{PREFIX}}-{{NAMESPACE}}
 spec:
   minAvailable: 1
