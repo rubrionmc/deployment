@@ -29,12 +29,6 @@ func buildEnvironment(environment string) {
 		return
 	}
 
-	globalConfig, err := loadGlobalConfig()
-	if err != nil {
-		log.FailProcess(0, "Failed to load global config:", err.Error())
-		return
-	}
-
 	runtimeDir := ".runtime/k8s"
 	err = os.RemoveAll(runtimeDir)
 	if err != nil {
@@ -48,14 +42,14 @@ func buildEnvironment(environment string) {
 	}
 
 	log.PrintStep(1, "Processing global files")
-	err = processDirectory("k8s/golbal", runtimeDir+"/global", envConfig, globalConfig, "", environment)
+	err = processDirectory("k8s/golbal", runtimeDir+"/global", envConfig, "", environment)
 	if err != nil {
 		log.FailProcess(0, "Failed to process global files:", err.Error())
 		return
 	}
 
 	log.PrintStep(1, "Processing namespace directories")
-	err = processNamespaces("k8s", runtimeDir, envConfig, globalConfig, environment)
+	err = processNamespaces("k8s", runtimeDir, envConfig, environment)
 	if err != nil {
 		log.FailProcess(0, "Failed to process namespaces:", err.Error())
 		return
@@ -71,10 +65,7 @@ type EnvironmentConfig struct {
 	CPUUsageLimit      string `yaml:"cpu_usage_limit"`
 	GameServerMinimal  int    `yaml:"game_server_minimal"`
 	VersionSuffix      string `yaml:"version_suffix"`
-}
-
-type GlobalConfig struct {
-	Images map[string]struct {
+	Images             map[string]struct {
 		Link    string `yaml:"link"`
 		Image   string `yaml:"image"`
 		Version string `yaml:"version"`
@@ -98,22 +89,7 @@ func loadEnvironmentConfig(environment string) (*EnvironmentConfig, error) {
 	return &config, nil
 }
 
-func loadGlobalConfig() (*GlobalConfig, error) {
-	file, err := os.ReadFile("k8s/config/config.yaml")
-	if err != nil {
-		return nil, fmt.Errorf("failed to read global config: %w", err)
-	}
-
-	var config GlobalConfig
-	err = yaml.Unmarshal(file, &config)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse global config: %w", err)
-	}
-
-	return &config, nil
-}
-
-func replacePlaceholders(content string, envConfig *EnvironmentConfig, globalConfig *GlobalConfig, namespace, environment string) string {
+func replacePlaceholders(content string, envConfig *EnvironmentConfig, namespace, environment string) string {
 	// static placeholders
 	domain := envConfig.ExposedDomain
 	prefix := strings.ReplaceAll(domain, ".", "-")
@@ -132,14 +108,14 @@ func replacePlaceholders(content string, envConfig *EnvironmentConfig, globalCon
 	}
 
 	// dynamic placeholders for images
-	for imageID, imageConfig := range globalConfig.Images {
+	for imageID, imageConfig := range envConfig.Images {
 		placeholder := fmt.Sprintf("{{IMAGE:%s}}", imageID)
 		imageName := fmt.Sprintf("%s:%s", imageConfig.Image, imageConfig.Version)
 		replacements[placeholder] = imageName
 	}
 
 	// dynamic placeholders for ports
-	for portID, port := range globalConfig.Ports {
+	for portID, port := range envConfig.Ports {
 		placeholder := fmt.Sprintf("{{PORT:%s}}", portID)
 		replacements[placeholder] = fmt.Sprintf("%d", port)
 	}
@@ -153,7 +129,7 @@ func replacePlaceholders(content string, envConfig *EnvironmentConfig, globalCon
 	return result
 }
 
-func processDirectory(srcDir, dstDir string, envConfig *EnvironmentConfig, globalConfig *GlobalConfig, namespace, environment string) error {
+func processDirectory(srcDir, dstDir string, envConfig *EnvironmentConfig, namespace, environment string) error {
 	return filepath.WalkDir(srcDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -173,7 +149,7 @@ func processDirectory(srcDir, dstDir string, envConfig *EnvironmentConfig, globa
 			return err
 		}
 
-		processedContent := replacePlaceholders(string(content), envConfig, globalConfig, namespace, environment)
+		processedContent := replacePlaceholders(string(content), envConfig, namespace, environment)
 
 		dstPath := filepath.Join(dstDir, relPath)
 		err = os.MkdirAll(filepath.Dir(dstPath), 0755)
@@ -258,7 +234,7 @@ func splitByMetadataName(content, dstPath string) error {
 	return nil
 }
 
-func processNamespaces(srcRoot, dstRoot string, envConfig *EnvironmentConfig, globalConfig *GlobalConfig, environment string) error {
+func processNamespaces(srcRoot, dstRoot string, envConfig *EnvironmentConfig, environment string) error {
 	entries, err := os.ReadDir(srcRoot)
 	if err != nil {
 		return err
@@ -278,16 +254,16 @@ func processNamespaces(srcRoot, dstRoot string, envConfig *EnvironmentConfig, gl
 		dstDir := filepath.Join(dstRoot, dirName)
 
 		log.PrintStep(2, "Processing namespace:", dirName)
-		err = processDirectory(srcDir, dstDir, envConfig, globalConfig, dirName, environment)
+		err = processDirectory(srcDir, dstDir, envConfig, dirName, environment)
 		if err != nil {
 			return fmt.Errorf("failed to process namespace %s: %w", dirName, err)
 		}
 
-		// Process shared files for each namespace
+		// process shared files for each namespace
 		sharedSrc := filepath.Join(srcRoot, "shared")
 		if _, err := os.Stat(sharedSrc); err == nil {
 			sharedDst := dstDir
-			err = processDirectory(sharedSrc, sharedDst, envConfig, globalConfig, dirName, environment)
+			err = processDirectory(sharedSrc, sharedDst, envConfig, dirName, environment)
 			if err != nil {
 				return fmt.Errorf("failed to process shared files for namespace %s: %w", dirName, err)
 			}

@@ -16,3 +16,35 @@ game_server_minimal: 1
 # the version suffix for the docker image, leave plank to use the prod version
 # e.g. "staging" for "1.0-staging"
 version_suffix: ""
+
+# the images to be used in the project
+images:
+  # the link to the dockerhub / pull page, the image name and the version to be used
+  postgresql:
+    link: "https://hub.docker.com/_/postgresql"
+    image: postgresql
+    version: 18.3n
+    intertnal: false
+
+  nats:
+    link: "https://hub.docker.com/_/nats"
+    image: nats
+    version: 2.9.17
+    intertnal: false
+
+  dragonfly:
+    link: "https://hub.docker.com/r/dragonflydb/dragonfly"
+    image: dragonflydb/dragonfly
+    version: v1.27.1
+    intertnal: false
+
+  fallback:
+    link: "https://hub.docker.com/r/itzg/minecraft-server"
+    image: itzg/minecraft-server
+    version: 1.20.4
+    intertnal: true
+
+# the ports for the exposing
+ports:
+  # the port to host minecraft on (25565 is the default minecraft port)
+  minecraft: 25565

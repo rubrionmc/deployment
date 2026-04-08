@@ -2,38 +2,38 @@
 
 ```bash
 # Install dependencies and setup environment (run this command only once)
-deployment.yaml.sh install
+deployment.sh install
 ```
 
 ```bash
 # Validate install without starting stoping or modifying the application
-deployment.yaml.sh hello
+deployment.sh hello
 ```
 
 ```bash
-# Start the application with the specified enviroments
-deployment.yaml.sh start <env> 
+# Start the application with the specified enviroment
+deployment.sh start <env> 
 # e.g., deployment.yaml.sh start lab
 ```
 
 ```bash
 # Stop the application
-deployment.yaml.sh status
+deployment.sh status
 ```
 
 ```bash
 # Deploy a specific pod with the optional -f flag to overwrite existing pods
-deployment.yaml.sh deploy <pod> [-f]
+deployment.sh deploy <pod> [-f]
 ```
 
 ```bash
 # Overwirte a specific image with a new local image
-deployment.yaml.sh overwrite <image>
+deployment.sh overwrite <image>
 ```
 
 ```bash
 # Stop the application
-deployment.yaml.sh stop
+deployment.sh stop
 ```
 
 ### Placeholders for the deployments
@@ -54,6 +54,8 @@ deployment.yaml.sh stop
 
 #### Dynamic Placeholders
 > {{IMAGE:imageid}}: The hole image name with the tag (e.g. myapp:latest)
+> 
+> {{PORT:portid}}: The hole image name with the tag (e.g. myapp:latest)
 
 ```dir
 k8s/
