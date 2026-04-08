@@ -1,7 +1,9 @@
 package main
 
 import (
+	"crypto/rand"
 	"deployment/src/log"
+	"encoding/hex"
 	"fmt"
 	"io/fs"
 	"os"
@@ -58,19 +60,22 @@ func buildEnvironment(environment string) {
 	log.EndProcess(0, "Build completed successfully")
 }
 
+type ImageConfig struct {
+	Link    string `yaml:"link"`
+	Image   string `yaml:"image"`
+	Version string `yaml:"version"`
+}
+
 type EnvironmentConfig struct {
-	ExposedDomain      string `yaml:"exposed_domain"`
-	ClaimDomainLocally bool   `yaml:"claim_domain_localy"`
-	MemoryUsageLimit   string `yaml:"memory_usage_limit"`
-	CPUUsageLimit      string `yaml:"cpu_usage_limit"`
-	GameServerMinimal  int    `yaml:"game_server_minimal"`
-	VersionSuffix      string `yaml:"version_suffix"`
-	Images             map[string]struct {
-		Link    string `yaml:"link"`
-		Image   string `yaml:"image"`
-		Version string `yaml:"version"`
-	} `yaml:"images"`
-	Ports map[string]int `yaml:"ports"`
+	ExposedDomain      string                 `yaml:"exposed_domain"`
+	ClaimDomainLocally bool                   `yaml:"claim_domain_localy"`
+	DevEnvironment     bool                   `yaml:"dev_enviroment"`
+	MemoryUsageLimit   string                 `yaml:"memory_usage_limit"`
+	CPUUsageLimit      string                 `yaml:"cpu_usage_limit"`
+	GameServerMinimal  int                    `yaml:"game_server_minimal"`
+	Images             map[string]ImageConfig `yaml:"images"`
+	Ports              map[string]int         `yaml:"ports"`
+	Secrets            map[string]string      `yaml:"secrets"`
 }
 
 func loadEnvironmentConfig(environment string) (*EnvironmentConfig, error) {
@@ -86,7 +91,54 @@ func loadEnvironmentConfig(environment string) (*EnvironmentConfig, error) {
 		return nil, fmt.Errorf("failed to parse environment config: %w", err)
 	}
 
+	err = resolveSecrets(&config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve secrets: %w", err)
+	}
+
 	return &config, nil
+}
+
+// resolveSecrets replaces any secret value that is "_" with a randomly
+func resolveSecrets(config *EnvironmentConfig) error {
+	if len(config.Secrets) == 0 {
+		return nil
+	}
+
+	var generated []string
+
+	for key, value := range config.Secrets {
+		if value != "_" {
+			continue
+		}
+
+		random, err := generateSecret(16) // 16 bytes -> 32 hex chars
+		if err != nil {
+			return fmt.Errorf("failed to generate secret for %q: %w", key, err)
+		}
+
+		config.Secrets[key] = random
+		generated = append(generated, fmt.Sprintf("%s=%s", key, random))
+	}
+
+	if len(generated) > 0 {
+		log.PrintStep(1, "Generated secrets (save these if needed):")
+		for _, entry := range generated {
+			log.PrintStep(2, entry)
+		}
+	}
+
+	return nil
+}
+
+// generateSecret returns a cryptographically random hex string of length bytes*2.
+func generateSecret(bytes int) (string, error) {
+	buf := make([]byte, bytes)
+	_, err := rand.Read(buf)
+	if err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(buf), nil
 }
 
 func replacePlaceholders(content string, envConfig *EnvironmentConfig, namespace, environment string) string {
@@ -110,14 +162,20 @@ func replacePlaceholders(content string, envConfig *EnvironmentConfig, namespace
 	// dynamic placeholders for images
 	for imageID, imageConfig := range envConfig.Images {
 		placeholder := fmt.Sprintf("{{IMAGE:%s}}", imageID)
-		imageName := fmt.Sprintf("%s:%s", imageConfig.Image, imageConfig.Version)
-		replacements[placeholder] = imageName
+		version := imageConfig.Version
+		replacements[placeholder] = fmt.Sprintf("%s:%s", imageConfig.Image, version)
 	}
 
 	// dynamic placeholders for ports
 	for portID, port := range envConfig.Ports {
 		placeholder := fmt.Sprintf("{{PORT:%s}}", portID)
 		replacements[placeholder] = fmt.Sprintf("%d", port)
+	}
+
+	// dynamic placeholders for secrets
+	for secretKey, secretValue := range envConfig.Secrets {
+		placeholder := fmt.Sprintf("{{SECRET:%s}}", secretKey)
+		replacements[placeholder] = secretValue
 	}
 
 	// replace all placeholders
@@ -163,7 +221,7 @@ func processDirectory(srcDir, dstDir string, envConfig *EnvironmentConfig, names
 			if err != nil {
 				return fmt.Errorf("failed to split file %s: %w", relPath, err)
 			}
-			return nil // don't create the original file when splitting
+			return nil
 		}
 
 		return os.WriteFile(dstPath, []byte(processedContent), 0644)
@@ -171,7 +229,6 @@ func processDirectory(srcDir, dstDir string, envConfig *EnvironmentConfig, names
 }
 
 func splitByMetadataName(content, dstPath string) error {
-	// split by YAML document separator ---
 	documents := strings.Split(content, "---")
 	baseName := strings.TrimSuffix(dstPath, filepath.Ext(dstPath))
 
@@ -191,35 +248,34 @@ func splitByMetadataName(content, dstPath string) error {
 		lines := strings.Split(document, "\n")
 		var metadataName string
 
-		// Find metadata.name in this document (handle separate lines)
 		for i, line := range lines {
 			line = strings.TrimSpace(line)
-			if line == "metadata:" {
-				// Look for name: in the next few lines
-				for j := i + 1; j < len(lines) && j < i+5; j++ {
-					nextLine := strings.TrimSpace(lines[j])
-					if strings.HasPrefix(nextLine, "name:") {
-						parts := strings.SplitN(nextLine, ":", 2)
-						if len(parts) >= 2 {
-							metadataName = strings.TrimSpace(parts[1])
-							break
-						}
-					}
-				}
-				break
+			if line != "metadata:" {
+				continue
 			}
+			for j := i + 1; j < len(lines) && j < i+5; j++ {
+				nextLine := strings.TrimSpace(lines[j])
+				if !strings.HasPrefix(nextLine, "name:") {
+					continue
+				}
+				parts := strings.SplitN(nextLine, ":", 2)
+				if len(parts) >= 2 {
+					metadataName = strings.TrimSpace(parts[1])
+					break
+				}
+
+			}
+			break
+
 		}
 
 		if metadataName == "" {
-			// Skip if no metadata.name found
 			continue
 		}
 
-		// Create filename: {metadataName}.yaml inside the folder
 		filename := fmt.Sprintf("%s.yaml", metadataName)
 		filePath := filepath.Join(folderPath, filename)
 
-		// Write the document with proper YAML separator
 		fullContent := document
 		if !strings.HasSuffix(fullContent, "\n") {
 			fullContent += "\n"

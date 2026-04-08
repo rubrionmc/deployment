@@ -13,9 +13,7 @@ cpu_usage_limit: 600%
 # the standart game server count, in pord 3/2
 game_server_minimal: 1
 
-# the version suffix for the docker image, leave plank to use the prod version
-# e.g. "staging" for "1.0-staging"
-version_suffix: ""
+dev_enviroment: true
 
 # the images to be used in the project
 images:
@@ -48,3 +46,26 @@ images:
 ports:
   # the port to host minecraft on (25565 is the default minecraft port)
   minecraft: 25565
+
+# the secrets to be used in the project
+# values that ar _ get randomly generated on each run, but can be overridden by setting them here
+secrets:
+  # dragonfly / redis-compatible cache
+  dragonfly-pass: "_"
+
+  # nats message broker
+  nats-user: "nats-svc"
+  nats-pass: "_"
+
+  # postgres superuser (used only by the statefulset init)
+  sql-root-user: "postgres"
+  sql-root-pass: "_"
+  sql-db: "app"
+
+  # postgres writer (backend services)
+  sql-writer-user: "writer"
+  sql-writer-pass: "_"
+
+  # postgres reader (api, reporting – read-only)
+  sql-reader-user: "reader"
+  sql-reader-pass: "_"

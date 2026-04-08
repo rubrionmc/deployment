@@ -1,0 +1,12 @@
+# postgres data volume – survives pod restarts and redeployments
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: {{PREFIX}}-{{NAMESPACE}}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

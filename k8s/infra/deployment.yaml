@@ -1,0 +1,134 @@
+# dragonfly (redis-compatible in-memory store)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dragonfly
+  namespace: {{PREFIX}}-{{NAMESPACE}}
+spec:
+  replicas: 1
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: dragonfly
+
+  template:
+    metadata:
+      labels:
+        app: dragonfly
+
+    spec:
+      containers:
+        - name: dragonfly
+          image: {{IMAGE:dragonfly}}
+
+          args:
+            - --requirepass=$(DRAGONFLY_PASSWORD)
+
+          ports:
+            - containerPort: 6379
+
+          env:
+            - name: DRAGONFLY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dragonfly-secret
+                  key: password
+
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: "50"
+            limits:
+              memory: 512Mi
+              cpu: "150"
+
+---
+
+# nats message broker
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats
+  namespace: {{PREFIX}}-{{NAMESPACE}}
+spec:
+  replicas: 1
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: nats
+
+  template:
+    metadata:
+      labels:
+        app: nats
+
+    spec:
+      containers:
+        - name: nats
+          image: {{IMAGE:nats}}
+
+          # inline credentials via config file mounted from secret
+          args:
+            - -c
+            - /etc/nats/nats.conf
+
+          ports:
+            - name: client
+              containerPort: 4222
+            - name: monitor
+              containerPort: 8222
+
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8222
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8222
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: "50"
+            limits:
+              memory: 256Mi
+              cpu: "100"
+
+          volumeMounts:
+            - name: nats-config
+              mountPath: /etc/nats
+
+      volumes:
+        - name: nats-config
+          secret:
+            secretName: nats-config-secret
