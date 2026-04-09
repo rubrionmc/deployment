@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: default-deny
+  name: deny-default
   namespace: {{PREFIX}}-{{NAMESPACE}}
 spec:
   podSelector: {}
@@ -15,7 +15,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-same-environment
+  name: allow-environment
   namespace: {{PREFIX}}-{{NAMESPACE}}
 spec:
   podSelector: {}
@@ -36,18 +36,3 @@ spec:
               environment: {{ENVIRONMENT}}
 
 ---
-
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-internet-egress
-  namespace: {{PREFIX}}-{{NAMESPACE}}
-spec:
-  podSelector: {}
-  policyTypes:
-    - Egress
-
-  egress:
-    - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
