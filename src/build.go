@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/rand"
 	"deployment/src/log"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"io/fs"
@@ -19,6 +20,46 @@ func runBuild(args []string) {
 		return
 	}
 	buildEnvironment(args[0])
+}
+
+func loadDotEnv() map[string]string {
+	result := make(map[string]string)
+
+	data, err := os.ReadFile(".env")
+	if err != nil {
+		return result // no .env
+	}
+
+	for _, line := range strings.Split(string(data), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		key := strings.TrimSpace(parts[0])
+		value := strings.TrimSpace(parts[1])
+		result[key] = value
+	}
+
+	return result
+}
+
+// githubAuth berechnet den Base64-codierten "username:token" String.
+func githubAuth(username, token string) string {
+	raw := username + ":" + token
+	return base64.StdEncoding.EncodeToString([]byte(raw))
+}
+
+func firstNonEmpty(vals ...string) string {
+	for _, v := range vals {
+		if v != "" {
+			return v
+		}
+	}
+	return ""
 }
 
 func buildEnvironment(environment string) {
@@ -145,8 +186,17 @@ func replacePlaceholders(content string, envConfig *EnvironmentConfig, namespace
 	// static placeholders
 	domain := envConfig.ExposedDomain
 	prefix := strings.ReplaceAll(domain, ".", "-")
+	env := loadDotEnv()
+
+	githubUsername := firstNonEmpty(env["GITHUB_USERNAME"], os.Getenv("GITHUB_USERNAME"))
+	githubToken := firstNonEmpty(env["GITHUB_TOKEN"], os.Getenv("GITHUB_TOKEN"))
+	githubEmail := firstNonEmpty(env["GITHUB_EMAIL"], os.Getenv("GITHUB_EMAIL"))
 
 	replacements := map[string]string{
+		"{{GITHUB_USERNAME}}":     githubUsername,
+		"{{GITHUB_TOKEN}}":        githubToken,
+		"{{GITHUB_AUTH}}":         githubAuth(githubUsername, githubToken),
+		"{{GITHUB_EMAIL}}":        githubEmail,
 		"{{ENVIRONMENT}}":         environment,
 		"{{DOMAIN}}":              domain,
 		"{{PREFIX}}":              prefix,

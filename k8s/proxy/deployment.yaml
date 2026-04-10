@@ -60,7 +60,6 @@ metadata:
   namespace: {{PREFIX}}-{{NAMESPACE}}
 spec:
   replicas: 1
-
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -79,9 +78,17 @@ spec:
         role: fallback
 
     spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+
       containers:
         - name: fallback
           image: {{IMAGE:fallback}}
+          env:
+            - name: DOMAIN
+              value: {{DOMAIN}}
+            - name: JAVA_OPTS
+              value: "-Xms128m -Xmx256m --sun-misc-unsafe-memory-access=allow"
 
           ports:
             - containerPort: 25565
@@ -89,6 +96,17 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 25565
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 10
+            successThreshold: 1
+
+          livenessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 5
 
           resources:
             requests:
