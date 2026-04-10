@@ -50,8 +50,10 @@ func main() {
 	case "status":
 		runStatus(args)
 
-	case "deploy":
-		runDeploy(args)
+	case "redeploy":
+		runReDeploy(args)
+
+	case "rollout":
 
 	default:
 		log.FailProcess(0, "Unknown command:", command, "use help for usage.")

@@ -286,13 +286,15 @@ func runStatus(args []string) {
 	log.EndProcess(0, "Status complete")
 }
 
-// usage: deployment deploy <env> <namespace> [deployment] [-f]
-func runDeploy(args []string) {
+// usage: deployment redeploy <env> <namespace> [deployment] [-f]
+func runReDeploy(args []string) {
 	if len(args) < 2 {
 		log.FailProcess(0, "Wrong usage: deployment deploy <env> <namespace> [deployment] [-f]")
 		return
 	}
 
+	// todo: add tag overwrite map unter %RUBRION_DEPLOYMENT_DIR%/.runtime/run/rollout.yaml
+	// format is image: "local-version"
 	if !checkKubectl() {
 		return
 	}
@@ -330,7 +332,7 @@ func deployNamespace(environment string, namespace string, forced bool) {
 		return
 	}
 
-	// normalise: strip the prefix so we always work with the short folder name
+	// normalize: strip the prefix so we always work with the short folder name
 	shortName := strings.TrimPrefix(namespace, prefix+"-")
 	fullNs := prefix + "-" + shortName
 
@@ -372,7 +374,7 @@ func deployDeployment(environment string, namespace string, deployment string, f
 		return
 	}
 
-	// normalise namespace
+	// normalize namespace
 	shortName := strings.TrimPrefix(namespace, prefix+"-")
 	fullNs := prefix + "-" + shortName
 
