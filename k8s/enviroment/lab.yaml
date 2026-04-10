@@ -8,7 +8,7 @@ claim_domain_localy: true
 memory_usage_limit: 16Gi
 
 # the max CPU Usage (100% = 1 CPU Core)
-cpu_usage_limit: 600%
+cpu_usage_limit: 600m
 
 # the standart game server count, in pord 3/2
 game_server_minimal: 1
@@ -18,10 +18,10 @@ dev_enviroment: true
 # the images to be used in the project
 images:
   # the link to the dockerhub / pull page, the image name and the version to be used
-  postgresql:
-    link: "https://hub.docker.com/_/postgresql"
-    image: postgresql
-    version: 18.3n
+  postgres:
+    link: "https://hub.docker.com/_/postgres"
+    image: postgres
+    version: 18.3
     intertnal: false
 
   nats:
@@ -37,6 +37,13 @@ images:
     intertnal: false
 
   fallback:
+    link: "https://hub.docker.com/r/itzg/minecraft-server"
+    image: itzg/minecraft-server
+    version: 1.20.4
+    intertnal: true
+
+
+  bungee:
     link: "https://hub.docker.com/r/itzg/minecraft-server"
     image: itzg/minecraft-server
     version: 1.20.4

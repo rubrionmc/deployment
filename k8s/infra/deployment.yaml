@@ -55,10 +55,10 @@ spec:
           resources:
             requests:
               memory: 128Mi
-              cpu: "50"
+              cpu: "50m"
             limits:
               memory: 512Mi
-              cpu: "150"
+              cpu: "150m"
 
 ---
 
@@ -119,10 +119,10 @@ spec:
           resources:
             requests:
               memory: 64Mi
-              cpu: "50"
+              cpu: "50m"
             limits:
               memory: 256Mi
-              cpu: "100"
+              cpu: "100m"
 
           volumeMounts:
             - name: nats-config
